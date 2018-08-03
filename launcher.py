@@ -5,6 +5,34 @@ import sys
 sys.path.append('../pytello/')
 import tello
 
+
+# Constants
+RC_VAL_MIN     = 364
+RC_VAL_MID     = 1024
+RC_VAL_MAX     = 1684
+
+IDX_ROLL       = 0
+IDX_PITCH      = 1
+IDX_THR        = 2
+IDX_YAW        = 3
+
+# Global vars
+mRCVal       = [1024, 1024, 1024, 1024]
+
+
+def axis_to_drone(axis):
+    if (axis == 0):
+        return RC_VAL_MID
+
+    drone_value = RC_VAL_MID
+    if axis < 0.0:
+        drone_value = RC_VAL_MID - (abs(axis) * (RC_VAL_MID - RC_VAL_MIN))
+    else:
+        drone_value = RC_VAL_MID + (axis * (RC_VAL_MAX - RC_VAL_MID))
+
+    return drone_value
+
+
 while True:
     print("Looking for controller")
     drone = None
@@ -19,6 +47,13 @@ while True:
                 if drone is not None:
                     # Grab left and right stick axis positions.
                     lx, ly, rx, ry = joystick['lx', 'ly', 'rx', 'ry']
+
+                    # Convert stick axis to drone Roll, pitch, thrust and yaw
+                    mRCVal[IDX_YAW] = axis_to_drone(lx)
+                    mRCVal[IDX_THR] = axis_to_drone(ly)
+
+                    mRCVal[IDX_ROLL] = axis_to_drone(rx)
+                    mRCVal[IDX_PITCH] = axis_to_drone(ry)
 
                     # Check whether any buttons have been pressed since before.
                     joystick.check_presses()
@@ -43,11 +78,12 @@ while True:
 
                         # Trigger buttons
                         if 'l1' in joystick.presses:
-                            pass
+                            drone.land()
                         if 'l2' in joystick.presses:
                             pass
+
                         if 'r1' in joystick.presses:
-                            pass
+                            drone.takeOff()
                         if 'r2' in joystick.presses:
                             pass
 
@@ -60,6 +96,9 @@ while True:
                             pass
                         if 'circle' in joystick.presses:
                             pass
+
+                    drone.setStickData(0, mRCVal[IDX_ROLL], mRCVal[IDX_PITCH], mRCVal[IDX_THR], mRCVal[IDX_YAW])
             sleep(0.05)
     except IOError:
+        drone.stop()
         sleep(1)
