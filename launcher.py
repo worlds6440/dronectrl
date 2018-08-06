@@ -46,14 +46,21 @@ while True:
                 # Grab left and right stick axis positions.
                 lx, ly, rx, ry = joystick['lx', 'ly', 'rx', 'ry']
 
-                print("Y:{}  T:{}  R:{}  P:{}".format(lx, ly, rx, ry))
-
                 # Convert stick axis to drone Roll, pitch, thrust and yaw
                 mRCVal[IDX_YAW] = axis_to_drone(lx)
                 mRCVal[IDX_THR] = axis_to_drone(ly)
 
                 mRCVal[IDX_ROLL] = axis_to_drone(rx)
                 mRCVal[IDX_PITCH] = axis_to_drone(ry)
+
+                print(
+                    "Y:{}  T:{}  R:{}  P:{}".format(
+                    mRCVal[IDX_YAW],
+                    mRCVal[IDX_THR],
+                    mRCVal[IDX_ROLL],
+                    mRCVal[IDX_PITCH])
+                )
+
 
                 # Check whether any buttons have been pressed since before.
                 joystick.check_presses()
@@ -112,5 +119,6 @@ while True:
                     )
             sleep(0.1)
     except IOError:
-        mDrone.stop()
+        if mDrone is not None:
+            mDrone.stop()
         sleep(1)
