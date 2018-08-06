@@ -40,63 +40,69 @@ while True:
             while joystick.connected:
 
                 # tested each loop, if drone isnt here then create.
-                if mDrone is None:
-                    mDrone = tello.Tello()
+                # if mDrone is None:
+                #     mDrone = tello.Tello()
 
-                if mDrone is not None:
-                    # Grab left and right stick axis positions.
-                    lx, ly, rx, ry = joystick['lx', 'ly', 'rx', 'ry']
+                # Grab left and right stick axis positions.
+                lx, ly, rx, ry = joystick['lx', 'ly', 'rx', 'ry']
 
-                    # Convert stick axis to drone Roll, pitch, thrust and yaw
-                    mRCVal[IDX_YAW] = axis_to_drone(lx)
-                    mRCVal[IDX_THR] = axis_to_drone(ly)
+                print("Y:{}  T:{}  R:{}  P:{}".format(lx, ly, rx, ry))
 
-                    mRCVal[IDX_ROLL] = axis_to_drone(rx)
-                    mRCVal[IDX_PITCH] = axis_to_drone(ry)
+                # Convert stick axis to drone Roll, pitch, thrust and yaw
+                mRCVal[IDX_YAW] = axis_to_drone(lx)
+                mRCVal[IDX_THR] = axis_to_drone(ly)
 
-                    # Check whether any buttons have been pressed since before.
-                    joystick.check_presses()
-                    if joystick.has_presses:
-                        print(joystick.presses)
+                mRCVal[IDX_ROLL] = axis_to_drone(rx)
+                mRCVal[IDX_PITCH] = axis_to_drone(ry)
 
-                        # DPad buttons
-                        if 'dup' in joystick.presses:
-                            pass
-                        if 'ddown' in joystick.presses:
-                            pass
-                        if 'dleft' in joystick.presses:
-                            pass
-                        if 'dright' in joystick.presses:
-                            pass
+                # Check whether any buttons have been pressed since before.
+                joystick.check_presses()
+                if joystick.has_presses:
+                    print(joystick.presses)
 
-                        # Middle Buttons
-                        if 'start' in joystick.presses:
-                            pass
-                        if 'home' in joystick.presses:
-                            pass
+                    # DPad buttons
+                    if 'dup' in joystick.presses:
+                        pass
+                    if 'ddown' in joystick.presses:
+                        pass
+                    if 'dleft' in joystick.presses:
+                        pass
+                    if 'dright' in joystick.presses:
+                        pass
 
-                        # Trigger buttons
-                        if 'l1' in joystick.presses:
+                    # Middle Buttons
+                    if 'start' in joystick.presses:
+                        pass
+                    if 'home' in joystick.presses:
+                        pass
+
+                    # Trigger buttons
+                    if 'l1' in joystick.presses:
+                        print("Landing")
+                        if mDrone is not None:
                             mDrone.land()
-                        if 'l2' in joystick.presses:
-                            pass
+                    if 'l2' in joystick.presses:
+                        pass
 
-                        if 'r1' in joystick.presses:
+                    if 'r1' in joystick.presses:
+                        print("Takeoff")
+                        if mDrone is not None:
                             mDrone.takeOff()
-                        if 'r2' in joystick.presses:
-                            pass
+                    if 'r2' in joystick.presses:
+                        pass
 
-                        # Shape Buttons
-                        if 'triangle' in joystick.presses:
-                            pass
-                        if 'cross' in joystick.presses:
-                            pass
-                        if 'square' in joystick.presses:
-                            pass
-                        if 'circle' in joystick.presses:
-                            pass
+                    # Shape Buttons
+                    if 'triangle' in joystick.presses:
+                        pass
+                    if 'cross' in joystick.presses:
+                        pass
+                    if 'square' in joystick.presses:
+                        pass
+                    if 'circle' in joystick.presses:
+                        pass
 
-                    # Send stick positions to drone
+                # Send stick positions to drone
+                if mDrone is not None:
                     mDrone.setStickData(
                         0,
                         mRCVal[IDX_ROLL],
@@ -104,7 +110,7 @@ while True:
                         mRCVal[IDX_THR],
                         mRCVal[IDX_YAW]
                     )
-            sleep(0.05)
+            sleep(0.1)
     except IOError:
         mDrone.stop()
         sleep(1)
