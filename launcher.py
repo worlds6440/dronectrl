@@ -20,15 +20,23 @@ IDX_YAW = 3
 mRCVal = [1024, 1024, 1024, 1024]
 mDrone = None
 
+
 def axis_to_drone(axis):
     if (axis == 0):
         return RC_VAL_MID
 
+    # Interpolate new value and ensure its an INT
     drone_value = RC_VAL_MID
     if axis < 0.0:
-        drone_value = RC_VAL_MID - (abs(axis) * (RC_VAL_MID - RC_VAL_MIN))
+        drone_value = int(RC_VAL_MID - (abs(axis) * (RC_VAL_MID - RC_VAL_MIN)))
     else:
-        drone_value = RC_VAL_MID + (axis * (RC_VAL_MAX - RC_VAL_MID))
+        drone_value = int(RC_VAL_MID + (axis * (RC_VAL_MAX - RC_VAL_MID)))
+
+    # Cap value to min/max range
+    if drone_value < RC_VAL_MIN:
+        drone_value = RC_VAL_MIN
+    if drone_value > RC_VAL_MAX:
+        drone_value = RC_VAL_MAX
 
     return drone_value
 
@@ -54,13 +62,12 @@ while True:
                 mRCVal[IDX_PITCH] = axis_to_drone(ry)
 
                 print(
-                    "Y:{}  T:{}  R:{}  P:{}".format(
-                    mRCVal[IDX_YAW],
-                    mRCVal[IDX_THR],
-                    mRCVal[IDX_ROLL],
-                    mRCVal[IDX_PITCH])
+                    ("Y:{}  T:{}  R:{}  P:{}").format(
+                        mRCVal[IDX_YAW],
+                        mRCVal[IDX_THR],
+                        mRCVal[IDX_ROLL],
+                        mRCVal[IDX_PITCH])
                 )
-
 
                 # Check whether any buttons have been pressed since before.
                 joystick.check_presses()
