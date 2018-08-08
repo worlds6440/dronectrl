@@ -20,6 +20,8 @@ IDX_YAW = 3
 mRCVal = [1024, 1024, 1024, 1024]
 mDrone = None
 
+mAllowControl = False
+
 
 def axis_to_drone(axis):
     if (axis == 0):
@@ -93,14 +95,14 @@ while True:
                     # Trigger buttons
                     if 'l1' in joystick.presses:
                         print("Landing")
-                        if mDrone is not None:
+                        if mDrone is not None and mAllowControl:
                             mDrone.land()
                     if 'l2' in joystick.presses:
                         pass
 
                     if 'r1' in joystick.presses:
                         print("Takeoff")
-                        if mDrone is not None:
+                        if mDrone is not None and mAllowControl:
                             mDrone.takeOff()
                     if 'r2' in joystick.presses:
                         pass
@@ -116,7 +118,7 @@ while True:
                         pass
 
                 # Send stick positions to drone
-                if mDrone is not None:
+                if mDrone is not None and mAllowControl:
                     mDrone.setStickData(
                         0,
                         mRCVal[IDX_ROLL],
@@ -124,8 +126,13 @@ while True:
                         mRCVal[IDX_THR],
                         mRCVal[IDX_YAW]
                     )
-            sleep(0.1)
+                # Timeout between controlled loop
+                sleep(0.1)
+            # Timeout between not connected to controller
+            sleep(1.0)
     except IOError:
         if mDrone is not None:
+            # Ensure drone is grounded if controller goes out of range
+            mDrone.land()
             mDrone.stop()
         sleep(1)
