@@ -42,16 +42,16 @@ def axis_to_drone(axis):
 
     return drone_value
 
-
-while True:
+running = True
+while running:
     print("Looking for controller")
     try:
         with ControllerResource(dead_zone=0.1, hot_zone=0.2) as joystick:
-            while joystick.connected:
+            while joystick.connected and running:
 
                 # tested each loop, if drone isnt here then create.
-                # if mDrone is None:
-                #     mDrone = tello.Tello()
+                if mDrone is None:
+                    mDrone = tello.Tello()
 
                 # Grab left and right stick axis positions.
                 lx, ly, rx, ry = joystick['lx', 'ly', 'rx', 'ry']
@@ -90,7 +90,9 @@ while True:
                     if 'start' in joystick.presses:
                         pass
                     if 'home' in joystick.presses:
-                        pass
+                        running = False
+                        if mDrone is not None and mAllowControl:
+                            mDrone.land()
 
                     # Trigger buttons
                     if 'l1' in joystick.presses:
