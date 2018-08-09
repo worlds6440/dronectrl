@@ -497,8 +497,8 @@ class Tello:
         isSPSRcvd = False
 
         # FFMPeg h264 stream pipe instead of writing to file
-        p = None
-        p = Popen(['ffplay', '-framerate', '25', '-'], stdin=PIPE, stdout=PIPE)
+        # p = None
+        # p = Popen(['ffplay', '-framerate', '25', '-'], stdin=PIPE, stdout=PIPE)
 
         while not stop_event.is_set():
             try:
@@ -524,14 +524,14 @@ class Tello:
 
                 # drop 2 bytes
                 if isSPSRcvd:
-                    if p is not None:
-                        p.stdin.write(data[2:size])
+                    # if p is not None:
+                    #     p.stdin.write(data[2:size])
                     fileVideo.write(data[2:size])
 
         sockVideo.close()
         fileVideo.close()
-        if p is not None:
-            p.kill()
+        # if p is not None:
+        #     p.kill()
         # print '_threadVideoRX terminated !!!'
 
 
