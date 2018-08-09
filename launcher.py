@@ -1,6 +1,6 @@
 from time import sleep
 from approxeng.input.selectbinder import ControllerResource
-from omxplayer.player import OMXPlayer
+# from omxplayer.player import OMXPlayer
 
 import sys
 sys.path.append('../pytello/')
@@ -82,13 +82,17 @@ while running:
 
                     # DPad buttons
                     if 'dup' in joystick.presses:
-                        mDrone.flipForward()
+                        if mDrone is not None and mAllowControl:
+                            mDrone.flipForward()
                     if 'ddown' in joystick.presses:
-                        mDrone.flipBackward()
+                        if mDrone is not None and mAllowControl:
+                            mDrone.flipBackward()
                     if 'dleft' in joystick.presses:
-                        pass
+                        if mDrone is not None and mAllowControl:
+                            mDrone.flipLeft()
                     if 'dright' in joystick.presses:
-                        pass
+                        if mDrone is not None and mAllowControl:
+                            mDrone.flipRight()
 
                     # Middle Buttons
                     if 'start' in joystick.presses:

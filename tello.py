@@ -200,35 +200,35 @@ class Tello:
 
     def flipForward(self):
         """ Flip forward. """
-        flip(self, self.TELLO_FLIPTYPE_FORWARD)
+        self.flip(self.TELLO_FLIPTYPE_FORWARD)
 
     def flipBackward(self):
         """ Flip backward. """
-        flip(self, self.TELLO_FLIPTYPE_BACKWRARD)
+        self.flip(self.TELLO_FLIPTYPE_BACKWRARD)
 
     def flipLeft(self):
         """ Flip Left. """
-        flip(self, self.TELLO_FLIPTYPE_LEFT)
+        self.flip(self.TELLO_FLIPTYPE_LEFT)
 
     def flipRight(self):
         """ Flip Right. """
-        flip(self, self.TELLO_FLIPTYPE_RIGHT)
+        self.flip(self.TELLO_FLIPTYPE_RIGHT)
 
     def flipForwardLeft(self):
         """ Flip forward left. """
-        flip(self, self.TELLO_FLIPTYPE_FORWARD_LEFT)
+        self.flip(self.TELLO_FLIPTYPE_FORWARD_LEFT)
 
     def flipForwardRight(self):
         """ Flip forward right. """
-        flip(self, self.TELLO_FLIPTYPE_FORWARD_RIGHT)
+        self.flip(self.TELLO_FLIPTYPE_FORWARD_RIGHT)
 
     def flipBackwardLeft(self):
         """ Flip backward left. """
-        flip(self, self.TELLO_FLIPTYPE_BACKWARD_LEFT)
+        self.flip(self.TELLO_FLIPTYPE_BACKWARD_LEFT)
 
     def flipBackwardRight(self):
         """ Flip backward right. """
-        flip(self, self.TELLO_FLIPTYPE_BACKWARD_RIGHT)
+        self.flip(self.TELLO_FLIPTYPE_BACKWARD_RIGHT)
 
     def flip(self, fliptype):
         """ Perform one of the 8 flip manouvers. """
