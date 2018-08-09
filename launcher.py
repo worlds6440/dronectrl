@@ -20,7 +20,7 @@ IDX_YAW = 3
 mRCVal = [1024, 1024, 1024, 1024]
 mDrone = None
 
-mAllowControl = False
+mAllowControl = True
 
 
 def axis_to_drone(axis):
