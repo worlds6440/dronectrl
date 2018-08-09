@@ -21,7 +21,7 @@ IDX_YAW = 3
 mRCVal = [1024, 1024, 1024, 1024]
 mDrone = None
 mPlayer = None
-mAllowControl = False
+mAllowControl = True
 mFoundController = False
 
 
