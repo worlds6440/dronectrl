@@ -1,5 +1,6 @@
 from time import sleep
 from approxeng.input.selectbinder import ControllerResource
+from omxplayer.player import OMXPlayer
 
 import sys
 sys.path.append('../pytello/')
@@ -19,8 +20,9 @@ IDX_YAW = 3
 # Global vars
 mRCVal = [1024, 1024, 1024, 1024]
 mDrone = None
-
+mPlayer = None
 mAllowControl = False
+mFoundController = False
 
 
 def axis_to_drone(axis):
@@ -48,10 +50,12 @@ while running:
     try:
         with ControllerResource(dead_zone=0.1, hot_zone=0.2) as joystick:
             while joystick.connected and running:
+                mFoundController = True
 
                 # tested each loop, if drone isnt here then create.
                 if mDrone is None:
                     mDrone = tello.Tello()
+                    # mPlayer = OMXPlayer(VIDEO_PATH)
 
                 # Grab left and right stick axis positions.
                 lx, ly, rx, ry = joystick['lx', 'ly', 'rx', 'ry']
@@ -63,13 +67,13 @@ while running:
                 mRCVal[IDX_ROLL] = axis_to_drone(rx)
                 mRCVal[IDX_PITCH] = axis_to_drone(ry)
 
-                print(
-                    ("Y:{}  T:{}  R:{}  P:{}").format(
-                        mRCVal[IDX_YAW],
-                        mRCVal[IDX_THR],
-                        mRCVal[IDX_ROLL],
-                        mRCVal[IDX_PITCH])
-                )
+                # print(
+                #     ("Y:{}  T:{}  R:{}  P:{}").format(
+                #         mRCVal[IDX_YAW],
+                #         mRCVal[IDX_THR],
+                #         mRCVal[IDX_ROLL],
+                #         mRCVal[IDX_PITCH])
+                # )
 
                 # Check whether any buttons have been pressed since before.
                 joystick.check_presses()
@@ -133,8 +137,16 @@ while running:
             # Timeout between not connected to controller
             sleep(1.0)
     except IOError:
+        # Controller not found, wait and re-try
+        # Ensure drone is grounded if controller has gone out of range.
+        if mFoundController:
+            print("Error, controller out of range")
         if mDrone is not None:
-            # Ensure drone is grounded if controller goes out of range
             mDrone.land()
-            mDrone.stop()
         sleep(1)
+
+# Ensure drone is grounded when we stop playing
+if mDrone is not None:
+    print("Landing and Stopping")
+    mDrone.land()
+    mDrone.stop()
