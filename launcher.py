@@ -82,9 +82,9 @@ while running:
 
                     # DPad buttons
                     if 'dup' in joystick.presses:
-                        pass
+                        mDrone.flipForward()
                     if 'ddown' in joystick.presses:
-                        pass
+                        mDrone.flipBackward()
                     if 'dleft' in joystick.presses:
                         pass
                     if 'dright' in joystick.presses:
