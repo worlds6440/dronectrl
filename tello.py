@@ -204,7 +204,7 @@ class Tello:
 
     def flipBackward(self):
         """ Flip backward. """
-        self.flip(self.TELLO_FLIPTYPE_BACKWRARD)
+        self.flip(self.TELLO_FLIPTYPE_BACKWARD)
 
     def flipLeft(self):
         """ Flip Left. """
