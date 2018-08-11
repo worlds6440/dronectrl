@@ -33,6 +33,14 @@ class Tello_Exposure(Enum):
     TELLO_EXPOSURE_2 = 2
 
 
+class Tello_PAC_Type(Enum):
+    TELLO_PT_48 = 0x48
+    TELLO_PT_50 = 0X50
+    TELLO_PT_60 = 0X60
+    TELLO_PT_68 = 0X68
+    TELLO_PT_70 = 0X70  # Flip Command
+
+
 # TELLO COMMAND enum
 class Tello_Command(Enum):
     TELLO_CMD_CONN = 1
@@ -249,11 +257,14 @@ class Tello:
 
     def takeOff(self):
         self.startStopRecording(True)
-        self._sendCmd(0x68, Tello_Command.TELLO_CMD_TAKEOFF.value, None)
+        self._sendCmd(
+            Tello_PAC_Type.TELLO_PT_68.value,
+            Tello_Command.TELLO_CMD_TAKEOFF.value,
+            None)
 
     def land(self):
         self._sendCmd(
-            0x68,
+            Tello_PAC_Type.TELLO_PT_68.value,
             Tello_Command.TELLO_CMD_LANDING.value,
             bytearray([0x00]))
         self.startStopRecording(False)
@@ -263,7 +274,7 @@ class Tello:
             if isStart else self.TELLO_SMART_VIDEO_STOP
         data = data | (mode << 2)
         self._sendCmd(
-            0x68,
+            Tello_PAC_Type.TELLO_PT_68.value,
             Tello_Command.TELLO_CMD_SMART_VIDEO_START.value,
             bytearray([data])
         )
@@ -271,7 +282,7 @@ class Tello:
     def bounce(self, isStart):
         data = 0x30 if isStart is True else 0x31
         self._sendCmd(
-            0x68,
+            Tello_PAC_Type.TELLO_PT_68.value,
             Tello_Command.TELLO_CMD_BOUNCE.value,
             bytearray([data]))
 
@@ -309,12 +320,15 @@ class Tello:
 
     def flip(self, fliptype):
         """ Perform one of the 8 flip manouvers. """
-        self.sendCommandInt(0x70, Tello_Command.TELLO_CMD_FLIP.value, fliptype)
+        self.sendCommandInt(
+            Tello_PAC_Type.TELLO_PT_70.value,
+            Tello_Command.TELLO_CMD_FLIP.value,
+            fliptype)
 
     def setBitRate(self, bitrate):
         """ Set the video bitrate. """
         self.sendCommandInt(
-            0x68,
+            Tello_PAC_Type.TELLO_PT_48.value,  # 0x48 used, but rev eng state 0x68
             Tello_Command.TELLO_CMD_SET_VIDEO_BIT_RATE.value,
             bitrate)
 
@@ -531,19 +545,46 @@ class Tello:
                     # self._printArray(data[:size])
 
                 elif cmdID == Tello_Command.TELLO_CMD_DATE_TIME.value:
-                    self._sendCmd(0x50, cmdID, None)
+                    self._sendCmd(
+                        Tello_PAC_Type.TELLO_PT_50.value,
+                        cmdID,
+                        None)
 
                 elif cmdID == Tello_Command.TELLO_CMD_STATUS.value:
                     if statusCtr == 3:
-                        self._sendCmd(0x60, Tello_Command.TELLO_CMD_REQ_VIDEO_SPS_PPS.value, None)
-                        self._sendCmd(0x48, Tello_Command.TELLO_CMD_VERSION_STRING.value, None)
-                        # self._sendCmd(0x48, self.TELLO_CMD_SET_VIDEO_BIT_RATE, None)
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_60.value,
+                            Tello_Command.TELLO_CMD_REQ_VIDEO_SPS_PPS.value,
+                            None)
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_48.value,
+                            Tello_Command.TELLO_CMD_VERSION_STRING.value,
+                            None)
+                        # self._sendCmd(
+                        #     0x48,
+                        #     self.TELLO_CMD_SET_VIDEO_BIT_RATE,
+                        #     None)
                         self.setBitRate(TELLO_BITRATE_AUTO.value)
-                        self._sendCmd(0x48, Tello_Command.TELLO_CMD_ALT_LIMIT.value, None)
-                        self._sendCmd(0x48, Tello_Command.TELLO_CMD_LOW_BATT_THRESHOLD.value, None)
-                        self._sendCmd(0x48, Tello_Command.TELLO_CMD_ATT_ANGLE.value, None)
-                        self._sendCmd(0x48, Tello_Command.TELLO_CMD_REGION.value, None)
-                        self._sendCmd(0x48, Tello_Command.TELLO_CMD_SET_EV.value, bytearray([0x00]))
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_48.value,
+                            Tello_Command.TELLO_CMD_ALT_LIMIT.value,
+                            None)
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_48.value,
+                            Tello_Command.TELLO_CMD_LOW_BATT_THRESHOLD.value,
+                            None)
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_48.value,
+                            Tello_Command.TELLO_CMD_ATT_ANGLE.value,
+                            None)
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_48.value,
+                            Tello_Command.TELLO_CMD_REGION.value,
+                            None)
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_48.value,
+                            Tello_Command.TELLO_CMD_SET_EV.value,
+                            bytearray([0x00]))
                     statusCtr = statusCtr + 1
 
                 elif cmdID == Tello_Command.TELLO_CMD_VERSION_STRING.value:
@@ -561,8 +602,14 @@ class Tello:
                         print 'alt limit : {0:2d} meter'.format(height)
 
                         if height != self.NEW_ALT_LIMIT:
-                            print 'set new alt limit : {0:2d} meter'.format(self.NEW_ALT_LIMIT)
-                            self._sendCmd(0x68, Tello_Command.TELLO_CMD_SET_ALT_LIMIT.value, bytearray([self.NEW_ALT_LIMIT & 0xff, (self.NEW_ALT_LIMIT >> 8) & 0xff]));
+                            print('set new alt limit : {0:2d} meter'.format(
+                                self.NEW_ALT_LIMIT))
+                            self._sendCmd(
+                                Tello_PAC_Type.TELLO_PT_68.value,
+                                Tello_Command.TELLO_CMD_SET_ALT_LIMIT.value,
+                                bytearray([
+                                    self.NEW_ALT_LIMIT & 0xff,
+                                    (self.NEW_ALT_LIMIT >> 8) & 0xff]))
 
                 elif cmdID == Tello_Command.TELLO_CMD_SMART_VIDEO_STATUS.value:
                     if payload.get_remaining() > 0:
@@ -570,8 +617,15 @@ class Tello:
                         dummy = resp & 0x07
                         start = (resp >> 3) & 0x03
                         mode = (resp >> 5) & 0x07
-                        print 'smart video status - mode:{0:d}, start:{1:d}'.format(mode, start)
-                        self._sendCmd(0x50, Tello_Command.TELLO_CMD_SMART_VIDEO_STATUS.value, bytearray([0x00]))
+                        print((
+                            'smart video status - mode:{0:d}, '
+                            'start:{1:d}').format(
+                            mode,
+                            start))
+                        self._sendCmd(
+                            Tello_PAC_Type.TELLO_PT_50.value,
+                            Tello_Command.TELLO_CMD_SMART_VIDEO_STATUS.value,
+                            bytearray([0x00]))
                 # else:
                     # for i in data:
                     #    print hex(ord(i)),
@@ -656,13 +710,16 @@ class Tello:
 # timerTask
 ###############################################################################
     def _timerTask(self, arg):
-        self._sendCmd(0x60, Tello_Command.TELLO_CMD_STICK.value, None)
+        self._sendCmd(
+            Tello_PAC_Type.TELLO_PT_60.value,
+            Tello_Command.TELLO_CMD_STICK.value,
+            None)
         self.rcCtr = self.rcCtr + 1
 
         # every 1sec
         if self.rcCtr % 50 == 0:
             self._sendCmd(
-                0x60,
+                Tello_PAC_Type.TELLO_PT_60.value,
                 Tello_Command.TELLO_CMD_REQ_VIDEO_SPS_PPS.value,
                 None
             )
