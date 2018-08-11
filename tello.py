@@ -214,9 +214,14 @@ class Tello:
 
     def __init__(
         self,
-        tello_ip=self.TELLO_IP,
-        portCmd=self.TELLO_PORT_COMMAND
+        tello_ip=None,
+        portCmd=None
     ):
+        if tello_ip is None:
+            tello_ip = self.TELLO_IP
+        if portCmd is None:
+            portCmd = self.TELLO_PORT_COMMAND
+
         self.pill2kill = threading.Event()
         self.task20ms = TimerTask(0.02, self._timerTask, "World")
 
