@@ -569,7 +569,8 @@ class Tello:
                         #     0x48,
                         #     self.TELLO_CMD_SET_VIDEO_BIT_RATE,
                         #     None)
-                        self.setBitRate(TELLO_BITRATE_AUTO.value)
+                        self.setBitRate(
+                            Tello_Bitrate.TELLO_BITRATE_AUTO.value)
                         self._sendCmd(
                             Tello_PAC_Type.TELLO_PT_48.value,
                             Tello_Command.TELLO_CMD_ALT_LIMIT.value,
