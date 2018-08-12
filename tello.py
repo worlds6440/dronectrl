@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import socket
 import threading
 import time
-import traceback
+# import traceback
 import datetime
 from timertask import TimerTask
 from bytebuffer import ByteBuffer
@@ -45,54 +45,54 @@ class Tello_PAC_Type(Enum):
 class Tello_Command(Enum):
     TELLO_CMD_CONN = 1
     TELLO_CMD_CONN_ACK = 2
-    TELLO_CMD_SSID = 17     # pt48
-    TELLO_CMD_SET_SSID = 18     # pt68
-    TELLO_CMD_SSID_PASS = 19     # pt48
-    TELLO_CMD_SET_SSID_PASS = 20     # pt68
-    TELLO_CMD_REGION = 21     # pt48
-    TELLO_CMD_SET_REGION = 22     # pt68
-    TELLO_CMD_REQ_VIDEO_SPS_PPS = 37     # pt60
-    TELLO_CMD_TAKE_PICTURE = 48     # pt68
-    TELLO_CMD_SWITCH_PICTURE_VIDEO = 49     # pt68
-    TELLO_CMD_START_RECORDING = 50     # pt68
-    TELLO_CMD_SET_EV = 52     # pt48  - Exposure level, Valid levels are 0, 1, and 2.
-    TELLO_CMD_DATE_TIME = 70     # pt50
-    TELLO_CMD_STICK = 80     # pt60
-    TELLO_CMD_LOG_HEADER_WRITE = 4176   # pt50
-    TELLO_CMD_LOG_DATA_WRITE = 4177   # RX_O
-    TELLO_CMD_LOG_CONFIGURATION = 4178   # pt50
-    TELLO_CMD_WIFI_SIGNAL = 26     # RX_O
-    TELLO_CMD_VIDEO_BIT_RATE = 40     # pt48
-    TELLO_CMD_LIGHT_STRENGTH = 53     # RX_O
-    TELLO_CMD_VERSION_STRING = 69     # pt48
-    TELLO_CMD_ACTIVATION_TIME = 71     # pt48
-    TELLO_CMD_LOADER_VERSION = 73     # pt48
-    TELLO_CMD_STATUS = 86     # RX_O
-    TELLO_CMD_ALT_LIMIT = 4182   # pt48
-    TELLO_CMD_LOW_BATT_THRESHOLD = 4183   # pt48
-    TELLO_CMD_ATT_ANGLE = 4185   # pt48
-    TELLO_CMD_SET_JPEG_QUALITY = 55     # pt68
-    TELLO_CMD_TAKEOFF = 84     # pt68
-    TELLO_CMD_LANDING = 85     # pt68
-    TELLO_CMD_SET_ALT_LIMIT = 88     # pt68
-    TELLO_CMD_FLIP = 92     # pt70
-    TELLO_CMD_THROW_FLY = 93     # pt48
-    TELLO_CMD_PALM_LANDING = 94     # pt48
-    TELLO_CMD_PLANE_CALIBRATION = 4180   # pt68
-    TELLO_CMD_SET_LOW_BATTERY_THRESHOLD = 4181   # pt68
-    TELLO_CMD_SET_ATTITUDE_ANGLE = 4184   # pt68
-    TELLO_CMD_ERROR1 = 67     # RX_O
-    TELLO_CMD_ERROR2 = 68     # RX_O
-    TELLO_CMD_FILE_SIZE = 98     # pt50
-    TELLO_CMD_FILE_DATA = 99     # pt50
-    TELLO_CMD_FILE_COMPLETE = 100    # pt48
-    TELLO_CMD_HANDLE_IMU_ANGLE = 90     # pt48
-    TELLO_CMD_SET_VIDEO_BIT_RATE = 32     # pt68
-    TELLO_CMD_SET_DYN_ADJ_RATE = 33     # pt68
-    TELLO_CMD_SET_EIS = 36     # pt68
-    TELLO_CMD_SMART_VIDEO_START = 128    # pt68
-    TELLO_CMD_SMART_VIDEO_STATUS = 129    # pt50
-    TELLO_CMD_BOUNCE = 4179   # pt68
+    TELLO_CMD_SSID = 17  # pt48
+    TELLO_CMD_SET_SSID = 18  # pt68
+    TELLO_CMD_SSID_PASS = 19  # pt48
+    TELLO_CMD_SET_SSID_PASS = 20  # pt68
+    TELLO_CMD_REGION = 21  # pt48
+    TELLO_CMD_SET_REGION = 22  # pt68
+    TELLO_CMD_WIFI_SIGNAL = 26  # RX_O
+    TELLO_CMD_SET_VIDEO_BIT_RATE = 32  # pt68
+    TELLO_CMD_SET_DYN_ADJ_RATE = 33  # pt68
+    TELLO_CMD_SET_EIS = 36  # pt68
+    TELLO_CMD_REQ_VIDEO_SPS_PPS = 37  # pt60
+    TELLO_CMD_VIDEO_BIT_RATE = 40  # pt48
+    TELLO_CMD_TAKE_PICTURE = 48  # pt68
+    TELLO_CMD_SWITCH_PICTURE_VIDEO = 49  # pt68
+    TELLO_CMD_START_RECORDING = 50  # pt68
+    TELLO_CMD_SET_EV = 52  # pt48  - Exposure, Valid levels are 0, 1, and 2.
+    TELLO_CMD_LIGHT_STRENGTH = 53  # RX_O
+    TELLO_CMD_SET_JPEG_QUALITY = 55  # pt68
+    TELLO_CMD_ERROR1 = 67  # RX_O
+    TELLO_CMD_ERROR2 = 68  # RX_O
+    TELLO_CMD_VERSION_STRING = 69  # pt48
+    TELLO_CMD_DATE_TIME = 70  # pt50
+    TELLO_CMD_ACTIVATION_TIME = 71  # pt48
+    TELLO_CMD_LOADER_VERSION = 73  # pt48
+    TELLO_CMD_STICK = 80  # pt60
+    TELLO_CMD_TAKEOFF = 84  # pt68
+    TELLO_CMD_LANDING = 85  # pt68
+    TELLO_CMD_STATUS = 86  # RX_O Flight Data
+    TELLO_CMD_SET_ALT_LIMIT = 88  # pt68
+    TELLO_CMD_HANDLE_IMU_ANGLE = 90  # pt48
+    TELLO_CMD_FLIP = 92  # pt70
+    TELLO_CMD_THROW_FLY = 93  # pt48
+    TELLO_CMD_PALM_LANDING = 94  # pt48
+    TELLO_CMD_FILE_SIZE = 98  # pt50
+    TELLO_CMD_FILE_DATA = 99  # pt50
+    TELLO_CMD_FILE_COMPLETE = 100  # pt48
+    TELLO_CMD_SMART_VIDEO_START = 128  # pt68
+    TELLO_CMD_SMART_VIDEO_STATUS = 129  # pt50
+    TELLO_CMD_LOG_HEADER_WRITE = 4176  # pt50
+    TELLO_CMD_LOG_DATA_WRITE = 4177  # RX_O
+    TELLO_CMD_LOG_CONFIGURATION = 4178  # pt50
+    TELLO_CMD_BOUNCE = 4179  # pt68
+    TELLO_CMD_PLANE_CALIBRATION = 4180  # pt68
+    TELLO_CMD_SET_LOW_BATTERY_THRESHOLD = 4181  # pt68
+    TELLO_CMD_ALT_LIMIT = 4182  # pt48
+    TELLO_CMD_LOW_BATT_THRESHOLD = 4183  # pt48
+    TELLO_CMD_SET_ATTITUDE_ANGLE = 4184  # pt68
+    TELLO_CMD_ATT_ANGLE = 4185  # pt48
 
 
 # Fliptype int
@@ -130,6 +130,7 @@ class Tello:
 
     # IP
     TELLO_IP = '192.168.10.1'
+    TELLO_IP_VIDEO = '192.168.10.2'
 
     # PORT
     TELLO_PORT_COMMAND = 8889
@@ -217,6 +218,7 @@ class Tello:
         tello_ip=None,
         portCmd=None
     ):
+        # If IP and or Port not set, use static defaults specified above
         if tello_ip is None:
             tello_ip = self.TELLO_IP
         if portCmd is None:
@@ -333,7 +335,7 @@ class Tello:
     def setBitRate(self, bitrate):
         """ Set the video bitrate. """
         self.sendCommandInt(
-            Tello_PAC_Type.TELLO_PT_48.value,  # 0x48 used, but rev eng state 0x68
+            Tello_PAC_Type.TELLO_PT_48.value,  # 0x48 used, but stated 0x68
             Tello_Command.TELLO_CMD_SET_VIDEO_BIT_RATE.value,
             bitrate)
 
@@ -430,6 +432,8 @@ class Tello:
                 if crc8 != calcCRC8:
                     print('wrong CRC8 {0:02x / 1:02x}'.format(crc8, calcCRC8))
 
+                # Use the ByteBuffer to sequentially
+                # get the next few bits of information
                 pacType = bb.get_ULInt8()
                 cmdID = bb.get_ULInt16()
                 seqID = bb.get_ULInt16()
@@ -438,12 +442,14 @@ class Tello:
                 # if dataSize > 0:
                 #    data = bytearray(dataSize)
                 #    bb.get(data)
+
                 bb.set_position(size - 2)
                 crc16 = bb.get_ULInt16()
                 calcCRC16 = self._calcCRC16(buf, size - 2)
                 if crc16 != calcCRC16:
-                    print('wrong CRC8 {0:04x / 1:04x}'.format(crc16, calcCRC16))
-                # print 'pt:{0:02x}, cmd:{1:4d}={2:04x}, seq:{3:04x}, data_sz:{4:d} - '.format(pacType, cmdID, cmdID, seqID, dataSize)
+                    print('wrong CRC8 {0:04x / 1:04x}'.format(
+                        crc16,
+                        calcCRC16))
             else:
                 if mark == 0x63:
                     ack = ByteBuffer.allocate(11)
@@ -457,7 +463,9 @@ class Tello:
                 else:
                     print('wrong mark !! {0:02x}'.format(mark))
         elif buf is not None:
-            print 'wrong packet length={0:d}, 1st byte={1:02x}'.format(len(buf), buf[0])
+            print('wrong packet length={0:d}, 1st byte={1:02x}'.format(
+                len(buf),
+                buf[0]))
 
         return cmdID
 
@@ -466,7 +474,7 @@ class Tello:
         payload = None
         out = None
         seq = 0
-        len = 0
+        # len = 0
 
         if cmdID == Tello_Command.TELLO_CMD_CONN.value:
             out = ByteBuffer.allocate(11)
@@ -527,36 +535,70 @@ class Tello:
 # CommandRX Thread
 ###############################################################################
     def _threadCmdRX(self, stop_event, arg):
+        """ Main thread: loops continuously
+        reading and setting drone state. """
+
         # print '_threadCmdRX started !!!'
         statusCtr = 0
         data = bytearray(1024)
         payload = None
+        socketErrorCount = 0
+        # max number of sequential socket errors or timeouts before we quit
+        maxSocketErrorCount = 3
 
+        # Loop until Thread.Event() is set true
         while not stop_event.is_set():
             try:
                 size, addr = self.sockCmd.recvfrom_into(data)
-            except socket.timeout, e:
+            except socket.timeout as e:
+                # Socket timed out, wait 1/2 second and try again
                 time.sleep(.5)
-                continue
-            except socket.error, e:
-                print e
-                continue
+
+                # Increment error count.
+                socketErrorCount += 1
+
+                if socketErrorCount >= maxSocketErrorCount:
+                    break  # Reached error tolerance
+                else:
+                    continue  # temp issue, keep trying
+            except socket.error as e:
+                # Socket error, report the error and try again
+                print(e)
+                # Increment error count.
+                socketErrorCount += 1
+
+                if socketErrorCount >= maxSocketErrorCount:
+                    break  # Reached error tolerance
+                else:
+                    continue  # temp issue, keep trying
             else:
+                # Get here if the TRY block above completed successfully.
+
+                # Reset socket error count as we have a working socket.
+                socketErrorCount = 0
+
+                # Parse the information out of the
+                # data just read from the socket.
                 cmdID = self._parsePacket(data[:size])
                 payload = ByteBuffer.wrap(data[9:size-1])
 
                 if cmdID == Tello_Command.TELLO_CMD_CONN_ACK.value:
-                    print 'connection successful !'
+                    # Successfull connection acknowledged.
+                    # Nothing needs to be returned
+                    print('connection successful !')
                     # self._printArray(data[:size])
 
                 elif cmdID == Tello_Command.TELLO_CMD_DATE_TIME.value:
+                    # Drone asking for current date/time.
                     self._sendCmd(
                         Tello_PAC_Type.TELLO_PT_50.value,
                         cmdID,
                         None)
 
                 elif cmdID == Tello_Command.TELLO_CMD_STATUS.value:
+                    # Drone status command.
                     if statusCtr == 3:
+                        # On the third status command, update drone variables
                         self._sendCmd(
                             Tello_PAC_Type.TELLO_PT_60.value,
                             Tello_Command.TELLO_CMD_REQ_VIDEO_SPS_PPS.value,
@@ -591,33 +633,40 @@ class Tello:
                             Tello_PAC_Type.TELLO_PT_48.value,
                             Tello_Command.TELLO_CMD_SET_EV.value,
                             bytearray([0x00]))
+                    # Increment drones request for status.
                     statusCtr = statusCtr + 1
 
                 elif cmdID == Tello_Command.TELLO_CMD_VERSION_STRING.value:
                     if size >= 42:
-                        print 'Version:' + data[10:30].decode()
-
-                elif cmdID == Tello_Command.TELLO_CMD_SMART_VIDEO_START.value:
-                    if payload.get_remaining() > 0:
-                        print 'smart video start'
+                        print('Version:' + data[10:30].decode())
 
                 elif cmdID == Tello_Command.TELLO_CMD_ALT_LIMIT.value:
+                    # Drone reporting altitude limit
                     if payload.get_remaining() > 0:
-                        payload.get_ULInt8()                    # 0x00
+                        payload.get_ULInt8()  # 0x00
                         height = payload.get_ULInt16()
-                        print 'alt limit : {0:2d} meter'.format(height)
+                        print('alt limit : {0:2d} meter'.format(height))
 
+                        # If current altitude limit differs,
+                        # set it to the new value now.
                         if height != self.NEW_ALT_LIMIT:
-                            print('set new alt limit : {0:2d} meter'.format(
-                                self.NEW_ALT_LIMIT))
                             self._sendCmd(
                                 Tello_PAC_Type.TELLO_PT_68.value,
                                 Tello_Command.TELLO_CMD_SET_ALT_LIMIT.value,
                                 bytearray([
                                     self.NEW_ALT_LIMIT & 0xff,
                                     (self.NEW_ALT_LIMIT >> 8) & 0xff]))
+                            # Report new alt limit after we havea changed it.
+                            print('set new alt limit : {0:2d} meter'.format(
+                                self.NEW_ALT_LIMIT))
+
+                elif cmdID == Tello_Command.TELLO_CMD_SMART_VIDEO_START.value:
+                    # Drone reporting start of smart 360 video recording
+                    if payload.get_remaining() > 0:
+                        print('smart video start')
 
                 elif cmdID == Tello_Command.TELLO_CMD_SMART_VIDEO_STATUS.value:
+                    # Drone reporting status of smart 360 video recording
                     if payload.get_remaining() > 0:
                         resp = payload.get_ULInt8()
                         dummy = resp & 0x07
@@ -646,7 +695,7 @@ class Tello:
         # print '_threadVideoRX started !!!'
 
         sockVideo = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        addrVideo = ('192.168.10.2', self.TELLO_PORT_VIDEO)
+        addrVideo = (self.TELLO_IP_VIDEO, self.TELLO_PORT_VIDEO)
         sockVideo.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sockVideo.settimeout(.5)
         sockVideo.bind(addrVideo)
@@ -654,23 +703,34 @@ class Tello:
         data = bytearray(4096)
 
         # Video recording
-        fileVideo = open('video.h264', 'wb') if video_recording else None
+        fileVideo = open('video.h264', 'wb') if self.video_recording else None
         isSPSRcvd = False
 
         # FFMPeg h264 stream pipe instead of writing to file
         p = None
-        # p = Popen(['ffplay', '-framerate', '25', '-'], stdin=PIPE, stdout=PIPE)
+        # p = Popen(
+        #         ['ffplay', '-framerate', '25', '-'],
+        #         stdin=PIPE,
+        #         stdout=PIPE)
 
         while not stop_event.is_set():
+            # Loop continuously reading video stream packets.
             try:
                 size, addr = sockVideo.recvfrom_into(data)
-            except socket.timeout, e:
+            except socket.timeout as e:
+                # Socket timed out, wait 1/2 second and try again
                 time.sleep(.5)
                 continue
-            except socket.error, e:
-                print e
+            except socket.error as e:
+                # Socket error, report error and stop
+                print(e)
+                # Close video file if one open
+                if fileVideo is not None:
+                    fileVideo.close()
+                    fileVideo = None
                 break
             else:
+                # Get here if the TRY block above completed successfully.
                 if (
                     size > 6 and
                     data[2] == 0x00 and
@@ -686,10 +746,10 @@ class Tello:
                 # Thread lock to read video_recording flag
                 self.lock.acquire()
                 try:
-                    if fileVideo is not None and self.video_recording:
+                    if fileVideo is None and self.video_recording:
                         # Starting to record video
                         fileVideo = open('video.h264', 'wb')
-                    elif self.video_recording:
+                    elif fileVideo is not None and not self.video_recording:
                         # Stopping video recording
                         fileVideo.close()
                         fileVideo = None
@@ -699,14 +759,20 @@ class Tello:
 
                 # drop 2 bytes
                 if isSPSRcvd:
-                    if p is not None:
-                        p.stdin.write(data[2:size])
+                    # Add frame to video file
                     if fileVideo is not None:
                         fileVideo.write(data[2:size])
+                    # Add frame to video pipe
+                    if p is not None:
+                        p.stdin.write(data[2:size])
 
+        # Close socket
         sockVideo.close()
+        # CLose video file if still open
         if fileVideo is not None:
             fileVideo.close()
+            fileVideo = None
+        # Close video pipe if still open
         if p is not None:
             p.kill()
         # print '_threadVideoRX terminated !!!'
