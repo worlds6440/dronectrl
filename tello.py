@@ -777,6 +777,47 @@ class Tello:
             p.kill()
         # print '_threadVideoRX terminated !!!'
 
+    def parseFlightData(self, flightData):
+        """ Parse the flight data strucutre passed in. """
+        bb = ByteBuffer.wrap(flightData)
+        BatteryLow = bb.get_bool()
+        BatteryLower = bb.get_bool()
+        BatteryPercentage = bb.get_ULInt8()
+        BatteryState = bb.get_bool()
+        CameraState = bb.get_ULInt8()
+        DownVisualState = bb.get_bool()
+        DroneBatteryLeft = bb.get_ULInt16()
+        DroneFlyTimeLeft = bb.get_ULInt16()
+        DroneHover = bb.get_bool()
+        EmOpen = bb.get_bool()
+        EmSky = bb.get_bool()
+        EmGround = bb.get_bool()
+        EastSpeed = bb.get_ULInt16()
+        ElectricalMachineryState = bb.get_ULInt16()
+        FactoryMode = bb.get_bool()
+        FlyMode = bb.get_ULInt8()
+        FlySpeed = bb.get_ULInt16()
+        FlyTime = bb.get_ULInt16()
+        FrontIn = bb.get_bool()
+        FrontLSC = bb.get_bool()
+        FrontOut = bb.get_bool()
+        GravityState = bb.get_bool()
+        GroundSpeed = bb.get_ULInt16()
+        Height = bb.get_ULInt16()
+        ImuCalibrationState = bb.get_ULInt8()
+        ImuState = bb.get_bool()
+        LightStrength = bb.get_ULInt8()
+        NorthSpeed = bb.get_ULInt16()
+        OutageRecording = bb.get_bool()
+        PowerState = bb.get_bool()
+        PressureState = bb.get_bool()
+        SmartVideoExitMode = bb.get_ULInt16()
+        TemperatureHeight = bb.get_bool()
+        ThrowFlyTimer = bb.get_ULInt8()
+        WifiDisturb = bb.get_ULInt8()
+        WifiStrength = bb.get_ULInt8()
+        WindState = bb.get_bool()
+
 
 ###############################################################################
 # timerTask
