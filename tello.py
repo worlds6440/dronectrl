@@ -242,6 +242,7 @@ class Tello:
             args=(self.pill2kill, "task")
         )
         self.threadVideoRX.start()
+
         self.seqID = 0
         self.stickData = 0
         self.rcCtr = 0
