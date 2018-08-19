@@ -24,6 +24,7 @@ import datetime
 from timertask import TimerTask
 from bytebuffer import ByteBuffer
 from enum import Enum
+from subprocess import Popen, PIPE
 
 
 # Tello video exposure
@@ -223,6 +224,8 @@ class Tello:
             tello_ip = self.TELLO_IP
         if portCmd is None:
             portCmd = self.TELLO_PORT_COMMAND
+
+        self.video_pipe = None
 
         self.pill2kill = threading.Event()
         self.task20ms = TimerTask(0.02, self._timerTask, "World")
@@ -708,11 +711,11 @@ class Tello:
         isSPSRcvd = False
 
         # FFMPeg h264 stream pipe instead of writing to file
-        p = None
-        # p = Popen(
-        #         ['ffplay', '-framerate', '25', '-'],
-        #         stdin=PIPE,
-        #         stdout=PIPE)
+        self.video_pipe = Popen(
+            ['ffplay', '-framerate', '25', '-'],
+            stdin=PIPE,
+            stdout=PIPE
+        )
 
         while not stop_event.is_set():
             # Loop continuously reading video stream packets.
@@ -764,8 +767,8 @@ class Tello:
                     if fileVideo is not None:
                         fileVideo.write(data[2:size])
                     # Add frame to video pipe
-                    if p is not None:
-                        p.stdin.write(data[2:size])
+                    if self.video_pipe is not None:
+                        self.video_pipe.stdin.write(data[2:size])
 
         # Close socket
         sockVideo.close()
@@ -774,8 +777,9 @@ class Tello:
             fileVideo.close()
             fileVideo = None
         # Close video pipe if still open
-        if p is not None:
-            p.kill()
+        if self.video_pipe is not None:
+            self.video_pipe.kill()
+            self.video_pipe = None
         # print '_threadVideoRX terminated !!!'
 
     def parseFlightData(self, buf):
